@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ayurvedic Chatbot</title>
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+      .image-container:hover img {
+        transform: scale(1.1);
+      }
+      
+      .chat-button{
+        padding: 15px 32px;
+        position: fixed ;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chatbot-container">
+      <div class="chat-header">
+        <h2>Ayurvedic Chatbot</h2>
+      </div>
+      <div class="chat-body">
+        <div class="message-container bot" ref="messageContainer">          
+        </div>
+        <div id="chat-log"></div>
+      </div>
+      <div class="chat-input">
+        <form id="chat-form">
+            <input type="text" id="user-message" />
+            <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+    <div class="image-container">  
+      <a href="{% url 'home'%}" > <img class="chat-button" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmmH1lU_fg6lg7eTP9gQJBJBTdviDlTlWT1Q&usqp=CAU" alt="image" width="100" height="100"></a>
+    </div>
+    <script>
+        $('#chat-form').submit(function(event) {
+            event.preventDefault();
+            var userMessage = $('#user-message').val();
+            $('#chat-log').append('<p>You: ' + userMessage + '</p>');
+            $.ajax({
+                url: '/get-response/',
+                method: 'POST',
+                data: {message: userMessage},
+                success: function(response) {
+                    $('#chat-log').append('<p>Ayu: ' + response.response + '</p>');
+                }
+            });
+            $('#user-message').val('');
+        });
+    </script>
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>
+
